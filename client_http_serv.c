@@ -749,13 +749,14 @@ int main(int argc, char *argv[]) {
    };
    strcpy(conf.dpath, argv[1]);
 
-   client_http_serv_open(&conf, _main_http_serv_cb);
+   if (client_http_serv_open(&conf, _main_http_serv_cb) > 0) {
 
-   for (;;) {
-      mnet_check(0);
+      for (;;) {
+         mnet_check(0);
+      }
+
+      client_http_serv_close();
    }
-
-   client_http_serv_close();
 
   exit:
    debug_close();
