@@ -1,7 +1,7 @@
 
 # About
 
-Simple HTTP Server support browser GET/POST, and very suitable for using in embedded env, components comes frome m_mem/m_buf/m_list/m_plat repos.
+Simple HTTP Server support browser download/upload files (HTTP GET/POST), and very suitable for embedded env, components comes frome m_mem/m_buf/m_list/m_plat repos.
 
 just
 
