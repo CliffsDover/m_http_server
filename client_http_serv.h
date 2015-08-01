@@ -25,6 +25,7 @@ enum {
 
 /* for POST now */
 typedef struct {
+   void *u;
    int client_id;
 
    int method;
@@ -43,7 +44,9 @@ typedef struct {
 typedef void (*client_http_serv_cb)(client_http_serv_state_t*);
 
 typedef struct {
+   void *u;
    int port;
+   char ipaddr[64];
    char title[32];              /* title name */
    char dev_name[32];           /* device name in page*/
    char dpath[MDIR_MAX_PATH];   /* path to list/store */

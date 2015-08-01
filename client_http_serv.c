@@ -504,7 +504,7 @@ _http_page_send(http_client_t *c, int ptype) {
       }
       int64_t bytes_left = (info->total_length - info->bytes_consumed);
       int min_len = (int)_MIN_OF(bytes_left, buf_available(b));
-      int readed = fread(buf_addr(b,buf_ptw(b)), 1, min_len, info->fp);
+      int readed = (int)fread(buf_addr(b,buf_ptw(b)), 1, min_len, info->fp);
       buf_forward_ptw(b, readed);
       info->bytes_consumed += readed;
       mnet_chann_send(c->tcp, buf_addr(b,0), buf_buffered(b));
@@ -514,12 +514,13 @@ _http_page_send(http_client_t *c, int ptype) {
       }
    }
    else if (ptype == HTTP_PAGE_MOVED) {
+      http_serv_t *hs = _hs();
       page = buf_create(1024);
       buf_fmt(page, "HTTP/1.1 301 Moved Permanently\r\n");
       buf_fmt(page, "Content-Type: text/html\r\n");
-      buf_fmt(page, "Content-Length: 56\r\n");
+      buf_fmt(page, "Content-Length: 57\r\n");
       buf_fmt(page, "Connection: keep-alive\r\n");
-      buf_fmt(page, "Location: http://127.0.0.1:1234/\r\n\r\n");
+      buf_fmt(page, "Location: http://%s:%d/\r\n\r\n", hs->conf.ipaddr, hs->conf.port);
       buf_fmt(page, "<html><body><h1>301 Moved Permanently</h1></body></html>");
    }
    /* else if (ptype == 101) { */
@@ -745,7 +746,7 @@ int main(int argc, char *argv[]) {
    mnet_init();
 
    client_http_serv_config_t conf = {
-      1234, "Lalawue's MacOSX", "iMac", "/Users/USERNAME/Desktop",
+      NULL, 1234, "Lalawue's MacOSX", "iMac", "/Users/USERNAME/Desktop",
    };
    strcpy(conf.dpath, argv[1]);
 
