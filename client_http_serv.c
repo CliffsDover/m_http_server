@@ -382,7 +382,7 @@ _http_page_header(http_client_t *c) {
    buf_fmt(b, "<html><header><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
    buf_fmt(b, "<title>%s</title>", hs->conf.title);
    buf_fmt(b, "<meta name=\"viewport\" content=\"width=device-width, user-scalable=no\">");
-   buf_fmt(b, "</header><body><h1>Files come from '%s'</h1><p>Shared file list from '%s':</p>",
+   buf_fmt(b, "</header><body><h1>Files come from '%s'</h1><p>Shared files from '%s':</p>",
            hs->conf.dev_name, hs->conf.dev_name);
    buf_fmt(b, "<table border=\"0\" width=\"100%%\"><tr>");
    buf_fmt(b, "<td>Name</td><td align=\"right\" width=\"30%%\">Size</td></tr>");
@@ -746,7 +746,7 @@ int main(int argc, char *argv[]) {
    mnet_init();
 
    client_http_serv_config_t conf = {
-      NULL, 1234, "Lalawue's MacOSX", "iMac", "/Users/USERNAME/Desktop",
+      NULL, 1234, "127.0.0.1", "Lalawue's MacOSX", "iMac", "/Users/USERNAME/Desktop",
    };
    strcpy(conf.dpath, argv[1]);
 
