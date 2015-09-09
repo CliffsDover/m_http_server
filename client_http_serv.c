@@ -99,9 +99,7 @@ _http_client_create(chann_t *n) {
 static inline void
 _http_client_destroy(http_client_t *c) {
    http_serv_t *hs = _hs();
-   if (!hs->running) {
-      return;
-   }
+   if (!hs->running) { return; }
    buf_destroy(c->buf);
    _hinfo_destroy(&c->info);
    lst_remove(hs->clients_lst, c->node);
@@ -111,6 +109,9 @@ _http_client_destroy(http_client_t *c) {
 
 static void
 _tcp_chann_cb(chann_event_t *e) {
+   http_serv_t *hs = _hs();
+   if (!hs->running) { return; }
+
    http_client_t *c = e->ud;
    if (e->event == MNET_EVENT_RECV) {
       buf_t *b = c->buf;
