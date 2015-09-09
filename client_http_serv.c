@@ -63,6 +63,7 @@ typedef struct {
    chann_t *tcp;
    buf_t *buf;
    http_info_t info;
+   lst_node_t *node;
 } http_client_t;
 
 typedef struct {
@@ -85,17 +86,25 @@ static inline http_serv_t* _hs(void) {
 
 static inline http_client_t*
 _http_client_create(chann_t *n) {
+   http_serv_t *hs = _hs();
    http_client_t *c = (http_client_t*)mm_malloc(sizeof(*c));
    c->tcp = n;
    c->buf = buf_create(HTTP_CLIENT_BUF_SIZE * 2);
-   _info("create client %p\n", c);
+   c->node = lst_pushl(hs->clients_lst, c);
+   _info("create client %p, %d\n", c, lst_count(hs->clients_lst));
    return c;
 }
 
+/* check hs runing for chann's callback in _tcp_chann_cb */
 static inline void
 _http_client_destroy(http_client_t *c) {
+   http_serv_t *hs = _hs();
+   if (!hs->running) {
+      return;
+   }
    buf_destroy(c->buf);
    _hinfo_destroy(&c->info);
+   lst_remove(hs->clients_lst, c->node);
    mm_free(c);
    _info("destroy client %p\n", c);
 }
@@ -129,10 +138,8 @@ _tcp_chann_cb(chann_event_t *e) {
 static void
 _tcp_listen_cb(chann_event_t *e) {
    if (e->event == MNET_EVENT_ACCEPT) {
-      http_serv_t *hs = (http_serv_t*)e->ud;
       http_client_t *c = _http_client_create(e->r);
       mnet_chann_set_cb(e->r, _tcp_chann_cb, c);
-      lst_pushl(hs->clients_lst, c);
    }
 }
 
@@ -439,9 +446,11 @@ _http_page_body(http_client_t *c) {
 static void
 _http_send_data(http_client_t *c) {
    http_info_t *info = &c->info;
-   int64_t bytes_left = (info->total_length - info->bytes_consumed);
-
+    
+   usleep(1000*1000);           /* FIXME: */
+    
    while (info->bytes_consumed < info->total_length) {
+      int64_t bytes_left = (info->total_length - info->bytes_consumed);
       buf_t *b = buf_create(HTTP_CLIENT_BUF_SIZE);
       int min_len = (int)_MIN_OF(bytes_left, buf_available(b));
       int readed = fread(buf_addr(b,buf_ptw(b)), 1, min_len, info->fp);
@@ -449,10 +458,8 @@ _http_send_data(http_client_t *c) {
       info->bytes_consumed += readed;
       mnet_chann_send(c->tcp, buf_addr(b,0), buf_buffered(b));
       buf_destroy(b);
-      do {
-         mnet_check(0);
-         //usleep(1);
-      } while (mnet_chann_cached(c->tcp) > 0);
+
+      usleep(1000*1000);        /* FIXME: */
    }
 
    if (info->bytes_consumed == info->total_length) {
@@ -496,19 +503,14 @@ _http_page_send(http_client_t *c, int ptype) {
    }
    else if (ptype == HTTP_PAGE_DOWNLOAD) {
       http_info_t *info = &c->info;
-      buf_t *b = buf_create(MNET_BUF_SIZE);
       if (info->bytes_consumed <= 0) {
+         buf_t *b = buf_create(MNET_BUF_SIZE);
          buf_fmt(b, "HTTP/1.1 200 OK\r\n");
          buf_fmt(b, "Content-Type: application/octet-stream\r\n");
          buf_fmt(b, "Content-Length: %u\r\n\r\n", info->total_length);
+         mnet_chann_send(c->tcp, buf_addr(b,0), buf_buffered(b));
+         buf_destroy(b);
       }
-      int64_t bytes_left = (info->total_length - info->bytes_consumed);
-      int min_len = (int)_MIN_OF(bytes_left, buf_available(b));
-      int readed = (int)fread(buf_addr(b,buf_ptw(b)), 1, min_len, info->fp);
-      buf_forward_ptw(b, readed);
-      info->bytes_consumed += readed;
-      mnet_chann_send(c->tcp, buf_addr(b,0), buf_buffered(b));
-      buf_destroy(b);
       if (info->bytes_consumed < info->total_length) {
          _http_send_data(c);
       }
@@ -689,12 +691,15 @@ int client_http_serv_open(
 void client_http_serv_close(void) {
    http_serv_t *hs = _hs();
    if ( hs->running ) {
+      hs->running = 0;
       while (lst_count(hs->clients_lst) > 0) {
+         http_client_t *c = lst_first(hs->clients_lst);
+         mnet_chann_close(c->tcp);
+         _http_client_destroy(c);
       }
       lst_destroy(hs->clients_lst);
       mnet_chann_close(hs->tcp);
       buf_destroy(hs->buf);
-      hs->running = 0;
    }
 }
 
