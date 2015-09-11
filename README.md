@@ -1,9 +1,12 @@
 
 # About
 
-Simple HTTP Server support browser download/upload files (HTTP GET/POST), cross platform and very suitable for embedded env, components comes frome m_mem/m_buf/m_list/m_plat repos.
+Simple HTTP Server support browser download/upload files (HTTP GET/POST), include iOS demo, 
+cross platform and very suitable for embedded env, components comes frome m_mem/m_buf/m_list/m_plat repos.
 
-just
+iOS demo is under ios dir, open the xcode project and run the example.
+
+Under MacOSX, just
 
 ```
 # make

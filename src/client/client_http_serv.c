@@ -23,6 +23,8 @@
 
 #include "client_http_serv.h"
 
+#include <unistd.h>
+
 /* only support 1 file now
  */
 
