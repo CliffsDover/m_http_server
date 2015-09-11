@@ -97,14 +97,17 @@ _http_client_create(chann_t *n) {
 
 /* check hs runing for chann's callback in _tcp_chann_cb */
 static inline void
-_http_client_destroy(http_client_t *c) {
+_http_client_destroy(http_client_t *c, int close_chann) {
    http_serv_t *hs = _hs();
    if (!hs->running) { return; }
    buf_destroy(c->buf);
    _hinfo_destroy(&c->info);
    lst_remove(hs->clients_lst, c->node);
+   if (close_chann) {
+      mnet_chann_close(c->tcp);
+   }
    mm_free(c);
-   _info("destroy client %p\n", c);
+   _info("destroy client %p, %d\n", c, lst_count(hs->clients_lst));
 }
 
 static void
@@ -132,7 +135,7 @@ _tcp_chann_cb(chann_event_t *e) {
    }
    else if (e->event == MNET_EVENT_CLOSE) {
       _err("close event\n");
-      _http_client_destroy(e->ud);
+      _http_client_destroy(e->ud, 0);
    }
 }
 
@@ -240,9 +243,11 @@ _serv_state_update(
    client_http_serv_state_t *st, http_client_t *c, int state)
 {
    http_info_t *info = &c->info;
+   http_serv_t *hs = _hs();
 
    memset(st, 0, sizeof(*st));
 
+   st->opaque = hs->conf.opaque;
    st->client_id = (int)c;
 
    st->method = info->method;
@@ -279,7 +284,7 @@ _hinfo_update_in_post(http_client_t *c, buf_t *b, int spos) {
    }
    _post_content_update(info, (char*)buf_addr(b,0), buf_buffered(b));
 #else
-   str_t *sinput = str_clone_cstr((char*)buf_addr(b,spos), buf_buffered(b));
+   str_t *sinput = str_clone_cstr((char*)buf_addr(b,spos), buf_buffered(b)-spos);
    str_t *sbn = info->boundary;
    str_t *shead = sinput;
 
@@ -296,7 +301,7 @@ _hinfo_update_in_post(http_client_t *c, buf_t *b, int spos) {
          }
          boundEnd += 4;
          consume = boundEnd;
-         info->bytes_consumed += consume;
+         info->bytes_consumed += boundEnd;
 
          str_t *fn = str_find(shead, "filename=\"([^\"]+)\"", 0);
          if ( fn ) {
@@ -316,7 +321,7 @@ _hinfo_update_in_post(http_client_t *c, buf_t *b, int spos) {
 
          shead = info->content;
          info->bn_count++;
-         _info("1 boundary, %d\n", str_len(info->content));
+         _info("1 boundary, content left %d\n", str_len(info->content));
       }
       else if (info->bn_count == 1) {
          int64_t left = (info->total_length - info->bytes_consumed);
@@ -324,7 +329,7 @@ _hinfo_update_in_post(http_client_t *c, buf_t *b, int spos) {
          if ((left - str_len(shead)) > HTTP_CLIENT_BUF_GAP) {
             _post_content_update(info, str_cstr(shead), str_len(shead));
          }
-         else if (left == (int64_t)str_len(shead)) {
+         else if (left <= (int64_t)str_len(shead)) {
             int bn_pos = str_bsearch(shead, sbn);
             if (bn_pos < 0) {
                goto func_end;
@@ -333,15 +338,11 @@ _hinfo_update_in_post(http_client_t *c, buf_t *b, int spos) {
 
             /* consume the rest of file content */
             consume += str_len(shead) - bn_pos;
-            info->bytes_consumed += consume;
+            info->bytes_consumed += str_len(shead) - bn_pos;
 
             _post_content_update(info, str_cstr(shead), bn_pos);
             info->bn_count++;
-            _info("2 boundary, %d\n", str_len(info->content));
-         }
-         else if (HTTP_CLIENT_BUF_SIZE - str_len(shead) <= HTTP_CLIENT_BUF_GAP) {
-            int min_len = (HTTP_CLIENT_BUF_SIZE - HTTP_CLIENT_BUF_GAP);
-            _post_content_update(info, str_cstr(shead), min_len);
+            _info("2 boundary, content left %d, %d\n", str_len(info->content), bn_pos);
          }
 
          break;
@@ -454,7 +455,7 @@ _http_send_data(http_client_t *c) {
       int64_t bytes_left = (info->total_length - info->bytes_consumed);
       buf_t *b = buf_create(HTTP_CLIENT_BUF_SIZE);
       int min_len = (int)_MIN_OF(bytes_left, buf_available(b));
-      int readed = fread(buf_addr(b,buf_ptw(b)), 1, min_len, info->fp);
+      int readed = (int)fread(buf_addr(b,buf_ptw(b)), 1, min_len, info->fp);
       buf_forward_ptw(b, readed);
       info->bytes_consumed += readed;
       mnet_chann_send(c->tcp, buf_addr(b,0), buf_buffered(b));
@@ -564,7 +565,7 @@ _http_consume_content(http_client_t *c) {
          fflush(info->fp);
       }
 #endif
-      info->bytes_consumed += consume;
+      info->bytes_consumed += str_len(s);
       if ( hs->cb ) {
          client_http_serv_state_t st;
          _serv_state_update(&st, c, HTTP_CB_STATE_CONTINUE);
@@ -636,6 +637,13 @@ _http_process_proto(http_client_t *c) {
          }
          else if (info->method == HTTP_METHOD_POST) {
             consume += _hinfo_update_in_post(c, b, consume);
+            if (info->bn_count >= 2) {
+               if (info->content && str_len(info->content)>0) {
+                  consume += _http_consume_content(c);
+               } else {
+                  _err("content invalid !\n");
+               }
+            }
             //_http_page_send(c, HTTP_PAGE_MOVED);
          }
       }
@@ -645,7 +653,7 @@ _http_process_proto(http_client_t *c) {
       if (info->content && str_len(info->content)>0) {
          consume += _http_consume_content(c);
       } else {
-         _err("content invalid\n");
+         _err("content invalid !\n");
       }
    }
 
@@ -692,49 +700,53 @@ int client_http_serv_open(
 void client_http_serv_close(void) {
    http_serv_t *hs = _hs();
    if ( hs->running ) {
-      hs->running = 0;
       while (lst_count(hs->clients_lst) > 0) {
-         http_client_t *c = lst_first(hs->clients_lst);
-         mnet_chann_close(c->tcp);
-         _http_client_destroy(c);
+         _http_client_destroy(lst_first(hs->clients_lst), 1);
       }
       lst_destroy(hs->clients_lst);
       mnet_chann_close(hs->tcp);
       buf_destroy(hs->buf);
+      hs->running = 0;
    }
 }
 
 #ifdef TEST_CLIENT_HTTP_SERV
 
-static FILE *_test_fp = NULL;
+typedef struct {
+   FILE *fp;
+} cb_data_t;
 
 static void
 _main_http_serv_cb(client_http_serv_state_t *st) {
+   http_serv_t *hs = _hs();
+   cb_data_t *d = st->opaque;
    if (st->method != HTTP_METHOD_POST) {
       _info("get path '%s', state %d\n", st->path, st->state);
       return;
    }
    switch (st->state) {
       case HTTP_CB_STATE_BEGIN: {
-         _test_fp = fopen("/Users/user/Desktop/cc.png", "wb");
-         {
-            char ch = st->path[st->path_len];
-            st->path[st->path_len] = 0;
-            _info("cb begin: %s\n", st->path);
-            st->path[st->path_len] = ch;
-         }
+         client_http_serv_config_t *conf = &hs->conf;
+         char path[MDIR_MAX_PATH] = {0};
+         int n = sprintf(path, "%s/", conf->dpath);
+         strncpy(&path[n], st->path, st->path_len);
+         d->fp = fopen(path, "wb");
+         _info("cb begin: %s\n", path);
          break;
       }
       case HTTP_CB_STATE_CONTINUE: {
-         _info("cb continue %lld/%lld\n", st->bytes_consumed, st->total_length);
-         if (st->buf_len > 0) {
-            fwrite(st->buf, 1, st->buf_len, _test_fp);
+         //_info("cb continue %lld/%lld\n", st->bytes_consumed, st->total_length);
+         if (d->fp && st->buf_len>0) {
+            fwrite(st->buf, 1, st->buf_len, d->fp);
          }
          break;
       }
       case HTTP_CB_STATE_END: {
          _info("cb end %lld/%lld\n", st->bytes_consumed, st->total_length);
-         fclose(_test_fp);
+         if (d->fp) {
+            fclose(d->fp);
+            d->fp = NULL;
+         }
          break;
       }
    }
@@ -751,15 +763,16 @@ int main(int argc, char *argv[]) {
 
    mnet_init();
 
+   cb_data_t cbdata = { NULL };
    client_http_serv_config_t conf = {
-      NULL, 1234, "127.0.0.1", "Lalawue's MacOSX", "iMac", "/Users/USERNAME/Desktop",
+      1234, "127.0.0.1", "Lalawue's MacOSX", "iMac", "", &cbdata,
    };
    strcpy(conf.dpath, argv[1]);
 
    if (client_http_serv_open(&conf, _main_http_serv_cb) > 0) {
 
       for (;;) {
-         mnet_check(0);
+         mnet_check(1);
       }
 
       client_http_serv_close();

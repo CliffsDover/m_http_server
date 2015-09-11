@@ -124,10 +124,12 @@ debug_log(const char *mod, int level, const char *fname,
                  stm.tm_min, stm.tm_sec, (int)tv.tv_usec>>10);
       }
 
-      if (d->option & D_OPT_FILE) {
+      if ((d->option & D_OPT_FILE) && fname) {
          char *p = strrchr(fname, '/');
          if ( p ) {
             fprintf(d->fp, "(%s:%d) ", p+1, line);
+         } else {
+            fprintf(d->fp, "(%s:%d) ", fname, line);
          }
       }
 

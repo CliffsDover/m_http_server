@@ -25,7 +25,7 @@ enum {
 
 /* for POST now */
 typedef struct {
-   void *u;
+   void *opaque;                /* opaque from serv config */
    int client_id;
 
    int method;
@@ -44,12 +44,12 @@ typedef struct {
 typedef void (*client_http_serv_cb)(client_http_serv_state_t*);
 
 typedef struct {
-   void *u;
    int port;
    char ipaddr[64];
    char title[32];              /* title name */
    char dev_name[32];           /* device name in page*/
    char dpath[MDIR_MAX_PATH];   /* path to list/store */
+   void *opaque;                /* opaque for serv state */
 } client_http_serv_config_t;
 
 int client_http_serv_open(client_http_serv_config_t*, client_http_serv_cb cb);
