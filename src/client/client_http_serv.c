@@ -755,11 +755,16 @@ _main_http_serv_cb(client_http_serv_state_t *st) {
 int main(int argc, char *argv[]) {
 
    debug_open("stdout");
+   debug_set_option(D_OPT_TIME);
 
    if (argc != 2) {
       _err("%s [DIR_PATH_TO_BROWSE]\n", argv[0]);
       goto exit;
    }
+
+   _info("\n");
+   _info("browse http://127.0.0.1:1234\n");
+   _info("\n");
 
    mnet_init();
 
