@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{480754B4-5A19-46E2-BB3D-58CA0BCC0418}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>MHttpServ</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
+    <ReferencePath>$(ProjectDir)\..\..\..\..\src\utils;$(ProjectDir)\..\..\..\..\src\plat;$(ProjectDir)\..\..\..\..\src\model;$(ProjectDir)\..\..\..\..\src\client;$(ReferencePath)</ReferencePath>
+    <SourcePath>$(ProjectDir)\..\..\..\..\src\utils;$(ProjectDir)\..\..\..\..\src\plat;$(ProjectDir)\..\..\..\..\src\model;$(ProjectDir)\..\..\..\..\src\client;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)\..\..\..\src\plat;$(ProjectDir)\..\..\..\src\model;$(ProjectDir)\..\..\..\src\client;$(ProjectDir)\..\..\..\src\utils;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;TEST_CLIENT_HTTP_SERV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <CompileAsManaged>Pure</CompileAsManaged>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.ico" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\client\client_http_serv.h" />
+    <ClInclude Include="..\..\..\src\model\m_buf.h" />
+    <ClInclude Include="..\..\..\src\model\m_debug.h" />
+    <ClInclude Include="..\..\..\src\model\m_list.h" />
+    <ClInclude Include="..\..\..\src\model\m_mem.h" />
+    <ClInclude Include="..\..\..\src\plat\plat_charset.h" />
+    <ClInclude Include="..\..\..\src\plat\plat_dir.h" />
+    <ClInclude Include="..\..\..\src\plat\plat_lock.h" />
+    <ClInclude Include="..\..\..\src\plat\plat_net.h" />
+    <ClInclude Include="..\..\..\src\plat\plat_type.h" />
+    <ClInclude Include="..\..\..\src\utils\utils_misc.h" />
+    <ClInclude Include="..\..\..\src\utils\utils_str.h" />
+    <ClInclude Include="..\..\..\src\utils\utils_url.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\client\client_http_serv.c" />
+    <ClCompile Include="..\..\..\src\model\m_buf.c" />
+    <ClCompile Include="..\..\..\src\model\m_debug.c" />
+    <ClCompile Include="..\..\..\src\model\m_list.c" />
+    <ClCompile Include="..\..\..\src\model\m_mem.c" />
+    <ClCompile Include="..\..\..\src\plat\plat_charset.c" />
+    <ClCompile Include="..\..\..\src\plat\plat_dir.c" />
+    <ClCompile Include="..\..\..\src\plat\plat_net.c" />
+    <ClCompile Include="..\..\..\src\plat\plat_type.c" />
+    <ClCompile Include="..\..\..\src\utils\utils_misc.c" />
+    <ClCompile Include="..\..\..\src\utils\utils_str.c" />
+    <ClCompile Include="..\..\..\src\utils\utils_url.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

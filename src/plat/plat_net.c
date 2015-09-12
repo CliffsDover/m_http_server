@@ -9,7 +9,10 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
+#pragma comment(lib, "ws2_32.lib")
+
 #else
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
@@ -24,12 +27,14 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <ctype.h>
+
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "plat_type.h"
 #include "plat_net.h"
 #include "m_mem.h"
 #include "m_debug.h"
@@ -69,7 +74,7 @@ enum {
 typedef struct s_rwbuf {
    int ptr, ptw;
    struct s_rwbuf *next;
-   char buf[0];
+   char *buf;
 } rwb_t;
 
 typedef struct s_rwbuf_head {
@@ -119,15 +124,21 @@ _rwb_available(rwb_t *b) {
    return b ? (MNET_BUF_SIZE - b->ptw) : 0;
 }
 
+static inline rwb_t*
+_rwb_new(void) {
+   rwb_t *b = (rwb_t*)mm_malloc(sizeof(rwb_t) + MNET_BUF_SIZE);
+   b->buf = (char*)b + sizeof(*b);
+   return b;
+}
+
 static rwb_t*
 _rwb_create_tail(rwb_head_t *h) {
-#define _RWB_NEW() ((rwb_t*)mm_malloc(sizeof(rwb_t) + MNET_BUF_SIZE))
    if (h->count <= 0) {
-      h->head = h->tail = _RWB_NEW();
+      h->head = h->tail = _rwb_new();
       h->count++;
    }
    else if (_rwb_available(h->tail) <= 0) {
-      h->tail->next = _RWB_NEW();
+      h->tail->next = _rwb_new();
       h->tail = h->tail->next;
       h->count++;
    }
@@ -267,7 +278,7 @@ _select_zero(mnet_t *ss, int set) {
 /* channel op
  */
 static chann_t*
-_chann_create(mnet_t *ss, int type, int state) {
+_chann_create(mnet_t *ss, chann_type_t type, chann_state_t state) {
    chann_t *n = (chann_t*)mm_malloc(sizeof(*n));
    n->state = state;
    n->type = type;
@@ -367,7 +378,7 @@ mnet_fini() {
 }
 
 chann_t*
-mnet_chann_open(int type) {
+mnet_chann_open(chann_type_t type) {
    return _chann_create(&g_mnet, type, CHANN_STATE_CLOSED);
 }
 
@@ -555,7 +566,7 @@ char* mnet_chann_addr(chann_t *n) {
    return NULL;
 }
 
-int64_t mnet_chann_bytes(chann_t *n, int be_send) {
+long long mnet_chann_bytes(chann_t *n, int be_send) {
    if ( n ) {
       return (be_send ? n->bytes_send : n->bytes_recv);
    }

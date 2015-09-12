@@ -153,14 +153,14 @@ mdir_list(mdir_t *d, int count) {
    char tmp[MDIR_MAX_PATH]={0}, fname[MDIR_MAX_PATH]={0};
    if ( !first_list ) { fnext=_findnext(d->fh, &d->fdata); i++; }
    for (i=0; (i<count) && fnext>=0; i++, fnext=_findnext(d->fh, &d->fdata)) {
-      int namlen = charset_to_prog(d->fdata.name, tmp, MDIR_MAX_PATH, fname, MDIR_MAX_PATH);
+      int namlen = charset_to_prog(d->fdata.name, tmp, MDIR_MAX_PATH, fname, MDIR_MAX_PATH) - 1;
       if ( _is_current_dir_or_hide_file(fname) ) { i--; }
       else if (d->fdata.attrib & (_A_HIDDEN | _A_SYSTEM)) { i--; }
       else {
          mdir_entry_t *e = _create_dir_entry(namlen + 1);
-         if (d->fdata.attrib & _A_SUBDIR) e->ftype = MDIR_DIRECOTRY;
-         else if (d->fdata.attrib & (_A_NORMAL | _A_RDONLY)) e->ftype = MDIR_FILE;
-         else e->ftype = MDIR_UNKNOW;
+         if (d->fdata.attrib & _A_SUBDIR) { e->ftype = MDIR_DIRECOTRY; }
+         else if (d->fdata.attrib & (_A_NORMAL | _A_RDONLY | _A_ARCH)) { e->ftype = MDIR_FILE; }
+         else { e->ftype = MDIR_UNKNOW; }
          e->fsize = d->fdata.size;
          e->namlen = namlen;
          strncpy(e->name, fname, namlen);
@@ -181,7 +181,7 @@ mdir_list(mdir_t *d, int count) {
          sprintf(d->tmp_path, "%s/%s", d->dir_path, dp->d_name);
          if (mdir_stat(d->tmp_path, &fsize, &ftype) ) {
             int namlen = strlen(dp->d_name);
-            e = _create_dir_entry( namlen + 1);
+            e = _create_dir_entry(namlen + 1);
             e->ftype = ftype;
             e->fsize = fsize;
             e->namlen = namlen;

@@ -4,13 +4,20 @@
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the MIT license. See LICENSE for details.
  */
+#if defined(_WIN32) || defined(_WIN64) 
+#include <windows.h>
+#else
+#include <sys/types.h>
+#include <sys/time.h>
+#include <unistd.h>
+#endif
 
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include <sys/time.h>
 #include <assert.h>
 #include "m_debug.h"
+#include "plat_type.h"
 
 typedef struct {
    int init;
@@ -94,6 +101,21 @@ void debug_raw(const char *fmt, ...) {
    }
 }
 
+/* micro second */
+int64_t debug_time(void) {
+#if defined(_WIN32) || defined(_WIN64)
+   FILETIME ft;
+   int64_t t;
+   GetSystemTimeAsFileTime(&ft);
+   t = (int64_t)ft.dwHighDateTime << 32 | ft.dwLowDateTime;
+   return t / 10 - 11644473600000000; /* Jan 1, 1601 */
+#else
+   struct timeval tv;
+   gettimeofday(&tv, NULL);
+   return (int64_t)tv.tv_sec * 1000000 + (int64_t)tv.tv_usec;
+#endif
+}
+
 void
 debug_log(const char *mod, int level, const char *fname,
           int line, const char *fmt, ...)
@@ -115,6 +137,10 @@ debug_log(const char *mod, int level, const char *fname,
       }
 
       if (d->option & D_OPT_TIME) {
+#if defined(_WIN32) || defined(_WIN64)
+         int64_t tm = debug_time();
+         fprintf(d->fp, "%u> ", tm);
+#else
          struct tm stm; time_t tloc; struct timeval tv;
          tloc = time(NULL);
          localtime_r(&tloc, &stm);
@@ -122,10 +148,11 @@ debug_log(const char *mod, int level, const char *fname,
          fprintf(d->fp, "%d/%d %02d:%02d:%02d.%03d> ",
                  stm.tm_mon+1, stm.tm_mday, stm.tm_hour,
                  stm.tm_min, stm.tm_sec, (int)tv.tv_usec>>10);
+#endif
       }
 
       if ((d->option & D_OPT_FILE) && fname) {
-         char *p = strrchr(fname, '/');
+         char *p = strrchr((char*)fname, '/');
          if ( p ) {
             fprintf(d->fp, "(%s:%d) ", p+1, line);
          } else {

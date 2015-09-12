@@ -10,7 +10,12 @@
 
 #include <ctype.h>
 #include <string.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+#include "plat_type.h"
+#else
 #include <strings.h>
+#endif
 
 #include "m_mem.h"
 #include "m_debug.h"
@@ -414,7 +419,7 @@ static const char *match (MatchState *ms, const char *s, const char *p) {
 
 static int _posrelat(int pos, int len) {
    if (pos >= 0) return pos;
-   else if (0u - pos > len) return 0;
+   else if ((0 - pos) > len) return 0;
    else return len - pos + 1;
 }
 
@@ -497,12 +502,12 @@ static str_t* _push_captures (MatchState *ms, const char *s, const char *e) {
 
 static str_t*
 _str_format(const char *fmt, va_list ap) {
-   char *p = mm_malloc(_FMT_SIZE);
+   char *p = (char*)mm_malloc(_FMT_SIZE);
    int n = vsnprintf(p, _FMT_SIZE, fmt, ap);
    if (n >= _FMT_SIZE) {
       int sz = n * 2;
       for (;;) {
-         p = mm_realloc(p, sz);
+         p = (char*)mm_realloc(p, sz);
          n = vsnprintf(p, sz, fmt, ap);
          if (n < sz) {
             break;
@@ -511,7 +516,7 @@ _str_format(const char *fmt, va_list ap) {
       }
    }
 
-   str_t *m = mm_malloc(sizeof(*m) + n);
+   str_t *m = (str_t*)mm_malloc(sizeof(*m) + n);
    m->cstr = (((char*)m) + sizeof(*m));
    m->len = n;
    memcpy(m->cstr, p, n);
@@ -547,7 +552,7 @@ str_dup(str_t *s) {
 str_t*
 str_clone_cstr(const char *cstr, int len) {
    if ( cstr ) {
-      str_t *m = mm_malloc(sizeof(*m));
+      str_t *m = (str_t*)mm_malloc(sizeof(*m));
       m->cstr = (char*)cstr;
       m->len = len;
       return m;
@@ -578,7 +583,7 @@ str_link(str_t *m, str_t *n) {
 const char*
 str_dump(str_t *m) {
    if ( m ) {
-      char *p = mm_malloc(m->len + 1);
+      char *p = (char*)mm_malloc(m->len + 1);
       snprintf(p, m->len + 1, "%s", m->cstr);
       p[m->len] = '\0';
       return p;

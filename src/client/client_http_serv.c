@@ -15,6 +15,7 @@
 #include "m_list.h"
 #include "m_debug.h"
 
+#include "plat_type.h"
 #include "plat_net.h"
 
 #include "utils_str.h"
@@ -22,8 +23,6 @@
 #include "utils_misc.h"
 
 #include "client_http_serv.h"
-
-#include <unistd.h>
 
 /* only support 1 file now
  */
@@ -118,7 +117,7 @@ _tcp_chann_cb(chann_event_t *e) {
    http_serv_t *hs = _hs();
    if (!hs->running) { return; }
 
-   http_client_t *c = e->opaque;
+   http_client_t *c = (http_client_t*)e->opaque;
    if (e->event == MNET_EVENT_RECV) {
       buf_t *b = c->buf;
       int ret = mnet_chann_recv(e->n, buf_addr(b,buf_ptw(b)), buf_available(b));
@@ -138,10 +137,10 @@ _tcp_chann_cb(chann_event_t *e) {
    }
    else if (e->event == MNET_EVENT_CLOSE) {
       //_err("close event\n");
-      _http_client_destroy(e->opaque, 0);
+      _http_client_destroy((http_client_t*)e->opaque, 0);
    }
    else if (e->event == MNET_EVENT_SEND) {
-      _http_send_file_data(e->opaque);
+      _http_send_file_data((http_client_t*)e->opaque);
    }
 }
 
@@ -707,7 +706,7 @@ void client_http_serv_close(void) {
    http_serv_t *hs = _hs();
    if ( hs->running ) {
       while (lst_count(hs->clients_lst) > 0) {
-         _http_client_destroy(lst_first(hs->clients_lst), 1);
+         _http_client_destroy((http_client_t*)lst_first(hs->clients_lst), 1);
       }
       lst_destroy(hs->clients_lst);
       mnet_chann_close(hs->tcp);
@@ -725,8 +724,8 @@ typedef struct {
 static void
 _main_http_serv_cb(client_http_serv_state_t *st) {
    http_serv_t *hs = _hs();
-   cb_data_t *d = st->opaque;
-   if (st->method != HTTP_METHOD_POST) {
+   cb_data_t *d = (cb_data_t*)st->opaque;
+   if (st->method == HTTP_METHOD_GET) {
       return;
    }
    switch (st->state) {
@@ -764,7 +763,8 @@ int main(int argc, char *argv[]) {
 
    if (argc != 2) {
       _err("%s [DIR_PATH_TO_BROWSE]\n", argv[0]);
-      goto exit;
+      debug_close();
+      return 0;
    }
 
    _info("\n");
@@ -788,7 +788,6 @@ int main(int argc, char *argv[]) {
       client_http_serv_close();
    }
 
-  exit:
    debug_close();
    return 0;
 }

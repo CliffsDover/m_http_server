@@ -50,7 +50,7 @@ void mnet_fini(void);
 int mnet_check(int microseconds);
 
 /* channels */
-chann_t* mnet_chann_open(int type);
+chann_t* mnet_chann_open(chann_type_t type);
 void mnet_chann_close(chann_t *n);
 
 int mnet_chann_state(chann_t *n);
@@ -70,6 +70,6 @@ int mnet_chann_send(chann_t *n, void *buf, int len);
 int mnet_chann_cached(chann_t*n);
 char* mnet_chann_addr(chann_t *n);
 
-int64_t mnet_chann_bytes(chann_t *n, int be_send);
+long long mnet_chann_bytes(chann_t *n, int be_send);
 
 #endif
