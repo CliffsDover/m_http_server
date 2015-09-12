@@ -761,23 +761,29 @@ int main(int argc, char *argv[]) {
    debug_open("stdout");
    debug_set_option(D_OPT_TIME);
 
-   if (argc != 2) {
-      _err("%s [DIR_PATH_TO_BROWSE]\n", argv[0]);
+   if (argc != 4) {
+      _err("%s [IP] [PORT] [DIR_PATH_TO_BROWSE]\n", argv[0]);
       debug_close();
       return 0;
    }
 
+   char *ipaddr = argv[1];
+   int port = atoi(argv[2]);
+   char *dpath = argv[3];
+
    _info("\n");
-   _info("listen on http://127.0.0.1:1234\n");
+   _info("listen on http://%s:%d\n", ipaddr, port);
    _info("\n");
 
    mnet_init();
 
    cb_data_t cbdata = { NULL };
    client_http_serv_config_t conf = {
-      1234, "127.0.0.1", "Lalawue's MacOSX", "iMac", "", &cbdata,
+      port, "", "Lalawue's MacOSX", "iMac", "", &cbdata,
    };
-   strcpy(conf.dpath, argv[1]);
+   strcpy(conf.ipaddr, ipaddr);
+   strcpy(conf.dpath, dpath);
+
 
    if (client_http_serv_open(&conf, _main_http_serv_cb) > 0) {
 

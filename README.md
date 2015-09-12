@@ -13,14 +13,14 @@ iOS demo is under ios directory, open the xcode project and run the example.
 
 # MacOSX demo
 
-Just
+Just make, and provide computer's ip address, port and directory
 
 ```
 # make
-# ./http_serv.out ~/Desktop
+# ./http_serv.out 192.168.1.101 1234 /tmp
 ```
 
-Then open your browser and address 'http://127.0.0.1:1234' to visit your Desktop normal files.
+Then open your browser and address 'http://192.168.1.101:1234' to visit.
 
 
 # Linux Demo
