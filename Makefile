@@ -1,6 +1,6 @@
 
 CC=gcc
-CFLAGS= -g -Wall
+CFLAGS= -g -Wall -std=c99
 
 SRCS := $(shell find src -name "*.c")
 DIRS := $(shell find src -type d)

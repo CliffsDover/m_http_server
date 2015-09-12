@@ -9,6 +9,8 @@
 #include <string.h>
 #include "plat_type.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+
 long long vs_atoll(const char *instr) {
    long long retval = 0;
    for (; (*instr>='0')&&(*instr<='9'); instr++) {  
@@ -18,7 +20,7 @@ long long vs_atoll(const char *instr) {
 }
 
 char *  
-strcasestr(const char *s, const char *find) {  
+vs_strcasestr(const char *s, const char *find) {  
    /** Less code size, but quadratic performance in the worst case.  */  
    char c, sc;  
    int len;  
@@ -36,3 +38,5 @@ strcasestr(const char *s, const char *find) {
    }  
    return ((char *)s);  
 }
+
+#endif

@@ -254,7 +254,7 @@ _serv_state_update(
    memset(st, 0, sizeof(*st));
 
    st->opaque = hs->conf.opaque;
-   st->client_id = (int)c;
+   st->client_id = *((int*)c);
 
    st->method = info->method;
    st->state = state;
@@ -464,7 +464,7 @@ _http_send_file_data(http_client_t *c) {
       info->bytes_consumed += readed;
       mnet_chann_send(c->tcp, buf_addr(b,0), buf_buffered(b));
       buf_destroy(b);
-      //_info("send file data %d\n", readed);
+      _info("GET send file data %lld/%lld\n", info->bytes_consumed, info->total_length);
    } else {
       _info("GET cancel send event, stop sending data\n");
       mnet_chann_active_event(c->tcp, MNET_EVENT_SEND, 0);
@@ -739,7 +739,7 @@ _main_http_serv_cb(client_http_serv_state_t *st) {
          break;
       }
       case HTTP_CB_STATE_CONTINUE: {
-         //_info("cb continue %lld/%lld\n", st->bytes_consumed, st->total_length);
+         _info("POST continue %lld/%lld\n", st->bytes_consumed, st->total_length);
          if (d->fp && st->buf_len>0) {
             fwrite(st->buf, 1, st->buf_len, d->fp);
          }

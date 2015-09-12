@@ -14,12 +14,13 @@ typedef unsigned long long uint64_t;
 #define atoll vs_atoll
 #define strncasecmp _strnicmp
 #define strcasecmp _stricmp
+#define strcasestr vs_strcasestr
 
 #ifdef __cplusplus
 extern "C" {
 #endif
    long long vs_atoll(const char *instr);
-   char* strcasestr(const char *s1, const char *s2);
+   char* vs_strcasestr(const char *s1, const char *s2);
 #ifdef __cplusplus
 }
 #endif

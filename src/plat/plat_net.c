@@ -22,7 +22,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <netdb.h>
-/* #include <sys/select.h> */
+#include <sys/select.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
