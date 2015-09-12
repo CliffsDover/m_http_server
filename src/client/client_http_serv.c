@@ -768,7 +768,7 @@ int main(int argc, char *argv[]) {
    }
 
    _info("\n");
-   _info("browse http://127.0.0.1:1234\n");
+   _info("listen http://127.0.0.1:1234\n");
    _info("\n");
 
    mnet_init();
