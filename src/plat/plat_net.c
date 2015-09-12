@@ -80,9 +80,9 @@ typedef struct s_rwbuf_head {
 
 struct s_mchann {
    int fd;
-   void *ud;
-   int state;
-   int type;
+   void *opaque;
+   chann_state_t state;
+   chann_type_t type;
    chann_cb cb;
    struct sockaddr_in addr;
    socklen_t addr_len;
@@ -91,6 +91,7 @@ struct s_mchann {
    struct s_mchann *next;
    int64_t bytes_send;
    int64_t bytes_recv;
+   int active_send_event;
 };
 
 typedef struct s_mnet {
@@ -268,7 +269,6 @@ _select_zero(mnet_t *ss, int set) {
 static chann_t*
 _chann_create(mnet_t *ss, int type, int state) {
    chann_t *n = (chann_t*)mm_malloc(sizeof(*n));
-   memset(n, 0, sizeof(*n));
    n->state = state;
    n->type = type;
    n->next = ss->channs;
@@ -312,12 +312,12 @@ _chann_close(mnet_t *ss, chann_t *n) {
 }
 
 static void
-_chann_event(chann_t *n, int event, chann_t *r) {
+_chann_event(chann_t *n, mnet_event_type_t event, chann_t *r) {
    chann_event_t e;
    e.event = event;
    e.n = n;
    e.r = r;
-   e.ud = n->ud;
+   e.opaque = n->opaque;
    if ( n->cb ) {
       n->cb( &e );
    }
@@ -466,10 +466,18 @@ mnet_chann_listen_ex(
 
 /* mnet channel api
  */
-void mnet_chann_set_cb(chann_t *n, chann_cb cb, void *ud) {
+void mnet_chann_set_cb(chann_t *n, chann_cb cb, void *opaque) {
    if ( n ) {
       n->cb = cb;
-      n->ud = ud;
+      n->opaque = opaque;
+   }
+}
+
+void mnet_chann_active_event(chann_t *n, mnet_event_type_t et, int active) {
+   if ( n ) {
+      if (et == MNET_EVENT_SEND) {
+         n->active_send_event = active;
+      }
    }
 }
 
@@ -577,7 +585,7 @@ mnet_check(int microseconds) {
          case CHANN_STATE_CONNECTED:
             nfds = nfds<=n->fd ? n->fd+1 : nfds;
             _select_add(ss, n->fd, MNET_SET_READ);
-            if (_rwb_count(&n->rwb_send) > 0) {
+            if ((_rwb_count(&n->rwb_send)>0) || n->active_send_event) {
                _select_add(ss, n->fd, MNET_SET_WRITE);
             }
             break;
@@ -585,6 +593,8 @@ mnet_check(int microseconds) {
             nfds = nfds<=n->fd ? n->fd+1 : nfds;
             _select_add(ss, n->fd, MNET_SET_WRITE);
             _select_add(ss, n->fd, MNET_SET_ERROR);
+            break;
+         default:
             break;
       }
       n = n->next;
@@ -635,14 +645,21 @@ mnet_check(int microseconds) {
             if ( _select_isset(sr, n->fd) ) {
                _chann_event(n, MNET_EVENT_RECV, NULL);
             }
-            if ((_rwb_count(&n->rwb_send)>0) && _select_isset(sw, n->fd)) {
-               int ret, len;
-               do {
-                  char *buf = _rwb_drain_param(&n->rwb_send, &len);
-                  ret = _chann_send(n, buf, len);
-                  if (ret > 0) _rwb_drain(&n->rwb_send, ret);
-               } while ((ret>0) && (_rwb_count(&n->rwb_send)>0));
+            if ( _select_isset(sw, n->fd) ) {
+               if (_rwb_count(&n->rwb_send) > 0) {
+                  int ret, len;
+                  do {
+                     char *buf = _rwb_drain_param(&n->rwb_send, &len);
+                     ret = _chann_send(n, buf, len);
+                     if (ret > 0) _rwb_drain(&n->rwb_send, ret);
+                  } while ((ret>0) && (_rwb_count(&n->rwb_send)>0));
+               }
+               else if ( n->active_send_event ) {
+                  _chann_event(n, MNET_EVENT_SEND, NULL);
+               }
             }
+            break;
+         default:
             break;
       }
       if (n->state == CHANN_STATE_CLOSING) {

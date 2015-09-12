@@ -774,7 +774,7 @@ str_debug(str_t *m, int print_len, int child) {
    if ( m ) {
       str_t *n = m;
       while (n) {
-         _info("%d:", n->len);
+         printf("%d:", n->len);
          int len = print_len<0 ? n->len : print_len;
          if (len && (len<=n->len)) {
             char tmp = n->cstr[len];

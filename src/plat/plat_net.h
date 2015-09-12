@@ -10,34 +10,35 @@
 
 #define MNET_BUF_SIZE (256*1024) /* 256kb */
 
-enum {
+typedef enum {
    CHANN_TYPE_STREAM = 1,
    CHANN_TYPE_DGRAM,
    CHANN_TYPE_BROADCAST,
-};
+} chann_type_t;
 
-enum {
+typedef enum {
    CHANN_STATE_CLOSED,
    CHANN_STATE_CLOSING,
    CHANN_STATE_CONNECTING,
    CHANN_STATE_CONNECTED,
    CHANN_STATE_LISTENING,
-};
+} chann_state_t;
 
-enum {
-   MNET_EVENT_RECV = 1,
-   MNET_EVENT_ACCEPT,
-   MNET_EVENT_CLOSE,
-   MNET_EVENT_CONNECT,
-   MNET_EVENT_DISCONNECT,
-};
+typedef enum {
+   MNET_EVENT_RECV = 1,     /* socket has data to read */
+   MNET_EVENT_SEND,         /* socket send buf empty, need set active */
+   MNET_EVENT_CLOSE,        /* socket close */
+   MNET_EVENT_ACCEPT,       /* tcp accept */
+   MNET_EVENT_CONNECT,      /* tcp connect */
+   MNET_EVENT_DISCONNECT,   /* tcp disconnect */
+} mnet_event_type_t;
 
 typedef struct s_mchann chann_t;
 typedef struct {
-   int event;
+   mnet_event_type_t event;
    chann_t *n;
-   chann_t *r;
-   void *ud;
+   chann_t *r;                  /* chann accept from remote */
+   void *opaque;                /* opaque in set_cb */
 } chann_event_t;
 
 typedef void (*chann_cb)(chann_event_t*);
@@ -60,7 +61,8 @@ int mnet_chann_connect(chann_t *n, const char *host, int port);
 int mnet_chann_listen_ex(chann_t *n, const char *host, int port, int backlog);
 #define mnet_chann_listen(n, p) mnet_chann_listen_ex(n, NULL, p, 5)
 
-void mnet_chann_set_cb(chann_t *n, chann_cb cb, void *ud);
+void mnet_chann_set_cb(chann_t *n, chann_cb cb, void *opaque);
+void mnet_chann_active_event(chann_t *n, mnet_event_type_t et, int active);
 
 int mnet_chann_recv(chann_t *n, void *buf, int len);
 int mnet_chann_send(chann_t *n, void *buf, int len);
