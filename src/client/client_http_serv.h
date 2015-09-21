@@ -31,8 +31,11 @@ typedef struct {
    int method;
    int state;
 
-   char *path;                  /* file name for POST; path in GET */
+   char *path;                  /* path in GET/POST */
    int path_len;
+
+   char *fname;                 /* file name in POST */
+   int fname_len;
 
    char *buf;                   /* file data for POST; null in GET */
    int buf_len;

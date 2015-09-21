@@ -264,8 +264,11 @@ _serv_state_update(
       st->path_len = str_len(info->path);
    }
    else {
-      st->path = str_cstr(info->fname);
-      st->path_len = str_len(info->fname);
+      st->path = str_cstr(info->path);
+      st->path_len = str_len(info->path);
+
+      st->fname = str_cstr(info->fname);
+      st->fname_len = str_len(info->fname);
    }
 
    if ( info->content ) {
@@ -733,7 +736,9 @@ _main_http_serv_cb(client_http_serv_state_t *st) {
          client_http_serv_config_t *conf = &hs->conf;
          char path[MDIR_MAX_PATH] = {0};
          int n = sprintf(path, "%s/", conf->dpath);
-         strncpy(&path[n], st->path, st->path_len);
+         strncpy(&path[n], st->path, st->path_len); n += st->path_len;
+         path[n] = '/'; n += 1;
+         strncpy(&path[n], st->fname, st->fname_len);
          d->fp = fopen(path, "wb");
          _info("POST begin [%s]\n", path);
          break;
