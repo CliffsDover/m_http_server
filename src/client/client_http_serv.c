@@ -793,7 +793,7 @@ int main(int argc, char *argv[]) {
    if (client_http_serv_open(&conf, _main_http_serv_cb) > 0) {
 
       for (;;) {
-         mnet_check(1);
+         mnet_check(1, 0);
       }
 
       client_http_serv_close();

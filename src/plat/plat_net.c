@@ -41,7 +41,7 @@
 #include <assert.h>
 
 #define _err(...) _mlog("mnet", D_ERROR, __VA_ARGS__)
-#define _log(...) _mlog("mnet", D_INFO, __VA_ARGS__)
+#define _log(...) _mlog("mnet", D_VERBOSE, __VA_ARGS__)
 
 #define _MIN_OF(a, b) (((a) < (b)) ? (a) : (b))
 #define _MAX_OF(a, b) (((a) > (b)) ? (a) : (b))
@@ -570,6 +570,13 @@ char* mnet_chann_addr(chann_t *n) {
    return NULL;
 }
 
+int mnet_chann_port(chann_t *n) {
+   if (n) {
+      return ntohs(n->addr.sin_port);
+   }
+   return 0;
+}
+
 long long mnet_chann_bytes(chann_t *n, int be_send) {
    if ( n ) {
       return (be_send ? n->bytes_send : n->bytes_recv);
@@ -578,14 +585,11 @@ long long mnet_chann_bytes(chann_t *n, int be_send) {
 }
 
 int
-mnet_check(int microseconds) {
+mnet_check(int sec, int microseconds) {
    int nfds = 0;
    chann_t *n = NULL;
    mnet_t *ss = &g_mnet;
    fd_set *sr, *sw, *se;
-
-   if (ss->chann_count <= 0)
-      return 0;
 
    nfds = 0;
 
@@ -603,6 +607,7 @@ mnet_check(int microseconds) {
             if ((_rwb_count(&n->rwb_send)>0) || n->active_send_event) {
                _select_add(ss, n->fd, MNET_SET_WRITE);
             }
+            _select_add(ss, n->fd, MNET_SET_ERROR);
             break;
          case CHANN_STATE_CONNECTING:
             nfds = nfds<=n->fd ? n->fd+1 : nfds;
@@ -619,7 +624,7 @@ mnet_check(int microseconds) {
    sw = &ss->fdset[MNET_SET_WRITE];
    se = &ss->fdset[MNET_SET_ERROR];
 
-   ss->tv.tv_sec = 0;
+   ss->tv.tv_sec = sec;
    ss->tv.tv_usec = microseconds;
    select(nfds, sr, sw, se, &ss->tv);
 
@@ -650,7 +655,7 @@ mnet_check(int microseconds) {
                   _chann_event(n, MNET_EVENT_DISCONNECT, NULL);
                }
             }
-            else if ( _select_isset(se, n->fd) ) {
+            if ( _select_isset(se, n->fd) ) {
                n->state = CHANN_STATE_CLOSING;
                _chann_event(n, MNET_EVENT_DISCONNECT, NULL);
             }
@@ -672,6 +677,10 @@ mnet_check(int microseconds) {
                else if ( n->active_send_event ) {
                   _chann_event(n, MNET_EVENT_SEND, NULL);
                }
+            }
+            if ( _select_isset(se, n->fd) ) {
+               n->state = CHANN_STATE_CLOSING;
+               _chann_event(n, MNET_EVENT_DISCONNECT, NULL);
             }
             break;
          default:

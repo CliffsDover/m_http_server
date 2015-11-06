@@ -47,7 +47,7 @@ typedef void (*chann_cb)(chann_event_t*);
 int mnet_init(void);
 void mnet_fini(void);
 
-int mnet_check(int microseconds);
+int mnet_check(int sec, int microseconds);
 
 /* channels */
 chann_t* mnet_chann_open(chann_type_t type);
@@ -67,8 +67,9 @@ void mnet_chann_active_event(chann_t *n, mnet_event_type_t et, int active);
 int mnet_chann_recv(chann_t *n, void *buf, int len);
 int mnet_chann_send(chann_t *n, void *buf, int len);
 
-int mnet_chann_cached(chann_t*n);
+int mnet_chann_cached(chann_t *n);
 char* mnet_chann_addr(chann_t *n);
+int mnet_chann_port(chann_t *n);
 
 long long mnet_chann_bytes(chann_t *n, int be_send);
 
