@@ -585,7 +585,7 @@ long long mnet_chann_bytes(chann_t *n, int be_send) {
 }
 
 int
-mnet_check(int sec, int microseconds) {
+mnet_check(int microseconds) {
    int nfds = 0;
    chann_t *n = NULL;
    mnet_t *ss = &g_mnet;
@@ -624,7 +624,7 @@ mnet_check(int sec, int microseconds) {
    sw = &ss->fdset[MNET_SET_WRITE];
    se = &ss->fdset[MNET_SET_ERROR];
 
-   ss->tv.tv_sec = sec;
+   ss->tv.tv_sec = 0;
    ss->tv.tv_usec = microseconds;
    select(nfds, sr, sw, se, &ss->tv);
 

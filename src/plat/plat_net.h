@@ -47,7 +47,7 @@ typedef void (*chann_cb)(chann_event_t*);
 int mnet_init(void);
 void mnet_fini(void);
 
-int mnet_check(int sec, int microseconds);
+int mnet_check(int microseconds);
 
 /* channels */
 chann_t* mnet_chann_open(chann_type_t type);

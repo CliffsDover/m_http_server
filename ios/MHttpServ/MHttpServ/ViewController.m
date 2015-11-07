@@ -127,7 +127,7 @@ static void _http_serv_cb(client_http_serv_state_t *st) {
 
 - (void)networkRunning {
     if (_bRunning) {
-        mnet_check(0, 1);
+        mnet_check(1);
         [self performSelector:@selector(networkRunning) withObject:nil afterDelay:0.05];
     }
 }
