@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2AB3891D1C3AA90300C94FDE /* plat_type.c in Sources */ = {isa = PBXBuildFile; fileRef = 2AB3891B1C3AA90300C94FDE /* plat_type.c */; };
 		6FDC5B991BA3373A00186E35 /* client_http_serv.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDC5B7F1BA3373A00186E35 /* client_http_serv.c */; };
 		6FDC5B9A1BA3373A00186E35 /* m_buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDC5B821BA3373A00186E35 /* m_buf.c */; };
 		6FDC5B9B1BA3373A00186E35 /* m_debug.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDC5B841BA3373A00186E35 /* m_debug.c */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2AB3891B1C3AA90300C94FDE /* plat_type.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = plat_type.c; sourceTree = "<group>"; };
+		2AB3891C1C3AA90300C94FDE /* plat_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plat_type.h; sourceTree = "<group>"; };
 		6FDC5B7F1BA3373A00186E35 /* client_http_serv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client_http_serv.c; sourceTree = "<group>"; };
 		6FDC5B801BA3373A00186E35 /* client_http_serv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_http_serv.h; sourceTree = "<group>"; };
 		6FDC5B821BA3373A00186E35 /* m_buf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = m_buf.c; sourceTree = "<group>"; };
@@ -123,6 +126,8 @@
 		6FDC5B8A1BA3373A00186E35 /* plat */ = {
 			isa = PBXGroup;
 			children = (
+				2AB3891B1C3AA90300C94FDE /* plat_type.c */,
+				2AB3891C1C3AA90300C94FDE /* plat_type.h */,
 				6FDC5B8B1BA3373A00186E35 /* plat_charset.c */,
 				6FDC5B8C1BA3373A00186E35 /* plat_charset.h */,
 				6FDC5B8D1BA3373A00186E35 /* plat_dir.c */,
@@ -331,6 +336,7 @@
 				6FDC5BA31BA3373B00186E35 /* utils_url.c in Sources */,
 				6FDC5B9F1BA3373A00186E35 /* plat_dir.c in Sources */,
 				6FE63B5B1BA3364E00A50065 /* AppDelegate.m in Sources */,
+				2AB3891D1C3AA90300C94FDE /* plat_type.c in Sources */,
 				6FDC5BA21BA3373A00186E35 /* utils_str.c in Sources */,
 				6FDC5BA01BA3373A00186E35 /* plat_net.c in Sources */,
 				6FDC5B9E1BA3373A00186E35 /* plat_charset.c in Sources */,
