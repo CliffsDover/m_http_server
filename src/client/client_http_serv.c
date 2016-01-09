@@ -81,6 +81,7 @@ static http_serv_t _g_hs;
 static int  _http_process_proto(http_client_t *c);
 static void _hinfo_destroy(http_info_t *info);
 static void _http_send_file_data(http_client_t *c);
+static void _serv_state_update(client_http_serv_state_t *st, http_client_t *c, int state);
 
 static inline http_serv_t* _hs(void) {
    return &_g_hs;
@@ -137,7 +138,13 @@ _tcp_chann_cb(chann_event_t *e) {
    }
    else if (e->event == MNET_EVENT_CLOSE) {
       //_err("close event\n");
-      _http_client_destroy((http_client_t*)e->opaque, 0);
+       http_client_t *c = (http_client_t*)e->opaque;
+      if (hs->cb && c->info.total_length>0) {
+         client_http_serv_state_t st;
+         _serv_state_update(&st, c, HTTP_CB_STATE_ERROR);
+         hs->cb(&st);
+       }
+      _http_client_destroy(c, 0);
    }
    else if (e->event == MNET_EVENT_SEND) {
       _http_send_file_data((http_client_t*)e->opaque);
@@ -244,7 +251,7 @@ _hinfo_create(buf_t *b, http_info_t *info) {
    return consume;
 }
 
-static inline void
+void
 _serv_state_update(
    client_http_serv_state_t *st, http_client_t *c, int state)
 {

@@ -213,6 +213,18 @@ static void _http_serv_cb(client_http_serv_state_t *st) {
         
         [self reloadLocalData];
     }
+    else if (st->state == HTTP_CB_STATE_ERROR) {
+        if (_fp) {
+            fclose(_fp);
+            _fp = NULL;
+            NSLog(@"HTTP POST: Data abort uploading");
+            
+            if (_progressView) {
+                CGRect r = _progressView.frame;
+                _progressView.frame = (CGRect){r.origin, 0, r.size.height};
+            }
+        }
+    }
 }
 
 #pragma mark - Local Data Manipulation

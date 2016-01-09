@@ -20,7 +20,8 @@ enum {
 enum {
    HTTP_CB_STATE_BEGIN,         /* method invoke */
    HTTP_CB_STATE_CONTINUE,      /* method continue */
-   HTTP_CB_STATE_END,           /* method end */
+   HTTP_CB_STATE_END,           /* method end, content length reached */
+   HTTP_CB_STATE_ERROR,         /* method error, content truncate */
 };
 
 /* for POST now */
