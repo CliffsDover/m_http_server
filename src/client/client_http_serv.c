@@ -375,12 +375,14 @@ static int
 _hinfo_update_in_get(http_client_t *c, char *path) {
    http_info_t *info = &c->info;
    if (info->fp == NULL) {
-      info->fp = fopen(path, "rb");
-      if (info->fp && (fseek(info->fp, 0, SEEK_END)>=0)) {
-         info->total_length = ftell(info->fp);
-         rewind(info->fp);
-         _info("GET total length [%lld]\n", info->total_length);
-         return 1;
+      uint64_t fsize = 0;
+      if ( mdir_stat(path, &fsize, NULL) ) {
+          info->total_length = fsize;
+          info->fp = fopen(path, "rb");
+          if (info->fp) {
+              _info("GET total length [%lld]\n", info->total_length);
+              return 1;
+          }
       }
    }
    return info->fp != NULL;
