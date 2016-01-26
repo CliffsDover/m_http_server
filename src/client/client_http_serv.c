@@ -524,7 +524,7 @@ _http_page_send(http_client_t *c, int ptype) {
          buf_t *b = buf_create(MNET_BUF_SIZE);
          buf_fmt(b, "HTTP/1.1 200 OK\r\n");
          buf_fmt(b, "Content-Type: application/octet-stream\r\n");
-         buf_fmt(b, "Content-Length: %u\r\n\r\n", info->total_length);
+         buf_fmt(b, "Content-Length: %lu\r\n\r\n", info->total_length);
          mnet_chann_send(c->tcp, buf_addr(b,0), buf_buffered(b));
          buf_destroy(b);
       }
