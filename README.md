@@ -10,6 +10,8 @@ include iOS/MacOSX/Linux/Windows demo.
 
 iOS demo is under ios directory, open the xcode project and run the example.
 
+App Store example, https://itunes.apple.com/cn/app/sui-shen-pan/id1076334703
+
 
 
 # MacOSX demo
