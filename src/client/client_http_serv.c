@@ -5,6 +5,8 @@
  * under the terms of the MIT license. See LICENSE for details.
  */
 
+#ifdef TEST_CLIENT_HTTP_SERV
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -727,8 +729,6 @@ void client_http_serv_close(void) {
    }
 }
 
-#ifdef TEST_CLIENT_HTTP_SERV
-
 typedef struct {
    FILE *fp;
 } cb_data_t;
@@ -814,4 +814,4 @@ int main(int argc, char *argv[]) {
 /*
   gcc -g -Wall -I../model/ -I../plat/ -I../utils ../plat/plat_net.c ../plat/plat_dir.c ../model/m_mem.c ../model/m_buf.c ../model/m_list.c ../model/m_debug.c ../utils/utils_str.c ../utils/utils_misc.c ../utils/utils_url.c client_http_serv.c -DTEST_CLIENT_HTTP_SERV
 */
-#endif
+#endif // TEST_CLIENT_HTTP_SERV
