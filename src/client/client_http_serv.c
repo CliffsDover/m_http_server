@@ -24,6 +24,8 @@
 
 #include "client_http_serv.h"
 
+#ifdef TEST_CLIENT_HTTP_SERV
+
 /* only support 1 file now
  */
 
@@ -726,3 +728,90 @@ void client_http_serv_close(void) {
       hs->running = 0;
    }
 }
+
+typedef struct {
+   FILE *fp;
+} cb_data_t;
+
+static void
+_main_http_serv_cb(client_http_serv_state_t *st) {
+   http_serv_t *hs = _hs();
+   cb_data_t *d = (cb_data_t*)st->opaque;
+   if (st->method == HTTP_METHOD_GET) {
+      return;
+   }
+   switch (st->state) {
+      case HTTP_CB_STATE_BEGIN: {
+         client_http_serv_config_t *conf = &hs->conf;
+         char path[MDIR_MAX_PATH] = {0};
+         int n = sprintf(path, "%s/", conf->dpath);
+         strncpy(&path[n], st->path, st->path_len); n += st->path_len;
+         path[n] = '/'; n += 1;
+         strncpy(&path[n], st->fname, st->fname_len);
+         d->fp = fopen(path, "wb");
+         _info("POST begin [%s]\n", path);
+         break;
+      }
+      case HTTP_CB_STATE_CONTINUE: {
+         _info("POST continue %lld/%lld\n", st->bytes_consumed, st->total_length);
+         if (d->fp && st->buf_len>0) {
+            fwrite(st->buf, 1, st->buf_len, d->fp);
+         }
+         break;
+      }
+      case HTTP_CB_STATE_END: {
+         _info("POST end %lld/%lld\n", st->bytes_consumed, st->total_length);
+         if (d->fp) {
+            fclose(d->fp);
+            d->fp = NULL;
+         }
+         break;
+      }
+   }
+}
+
+int main(int argc, char *argv[]) {
+
+   debug_open("stdout");
+   debug_set_option(D_OPT_TIME);
+
+   if (argc != 4) {
+      _err("%s [IP] [PORT] [DIR_PATH_TO_BROWSE]\n", argv[0]);
+      debug_close();
+      return 0;
+   }
+
+   char *ipaddr = argv[1];
+   int port = atoi(argv[2]);
+   char *dpath = argv[3];
+
+   _info("\n");
+   _info("listen on http://%s:%d\n", ipaddr, port);
+   _info("\n");
+
+   mnet_init();
+
+   cb_data_t cbdata = { NULL };
+   client_http_serv_config_t conf = {
+      port, "", "Lalawue's MacOSX", "iMac", "", &cbdata,
+   };
+   strcpy(conf.ipaddr, ipaddr);
+   strcpy(conf.dpath, dpath);
+
+
+   if (client_http_serv_open(&conf, _main_http_serv_cb) > 0) {
+
+      for (;;) {
+         mnet_check(1000);
+      }
+
+      client_http_serv_close();
+   }
+
+   debug_close();
+   return 0;
+}
+/*
+  gcc -g -Wall -I../model/ -I../plat/ -I../utils ../plat/plat_net.c ../plat/plat_dir.c ../model/m_mem.c ../model/m_buf.c ../model/m_list.c ../model/m_debug.c ../utils/utils_str.c ../utils/utils_misc.c ../utils/utils_url.c client_http_serv.c -DTEST_CLIENT_HTTP_SERV
+*/
+#endif
