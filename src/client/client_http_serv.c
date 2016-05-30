@@ -427,7 +427,7 @@ _http_page_footer(http_client_t *c) {
    buf_fmt(b, "</label><label><input type=\"submit\" name=\"button\" />");
    buf_fmt(b, "</label></form></td></tr><tr><td colspan=\"2\">");
    buf_fmt(b, "<hr></hr></td></tr></table>");
-   buf_fmt(b, "<address>Embeded HTTP Server</address></body></html>");
+   buf_fmt(b, "<address>MHTTP Server</address></body></html>");
    return b;
 }
 

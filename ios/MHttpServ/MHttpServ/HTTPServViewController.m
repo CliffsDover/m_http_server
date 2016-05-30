@@ -28,7 +28,10 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     _itemAry = [NSMutableArray new];
+    
     [MHTTPServ sharedIns].delegate = self;
+    [MHTTPServ sharedIns].pageTitle = @"Exp. Title";
+    [MHTTPServ sharedIns].pageDevName = @"Exp. Device";
     
     [self createTableView];
     [self createInfoView];
