@@ -59,7 +59,8 @@ The ObjC interface of MHTTPServ was below:
 ````obj-c
 @protocol MHTTPServDelegate <NSObject>
 @optional
-- (void)onMHTTPServEvent:(NSString*)errorMsg fileName:(NSString*)fileName fileSize:(int64_t)fileSize percent:(float)percent;
+- (void)onMHTTPServEvent:(NSString*)errorMsg fileName:(NSString*)fileName
+                fileSize:(int64_t)fileSize percent:(float)percent;
 @end
 
 @interface MHTTPServ : NSObject
@@ -76,7 +77,8 @@ The ObjC interface of MHTTPServ was below:
 
 - (BOOL)startServ:(NSString*)dirPath onPort:(NSInteger)port;
 - (void)stopServ;
-- (void)enumerateDir:(NSString*)dirPath block:(BOOL(^)(NSString *fileName, BOOL isDir, int64_t fileSize))block;
+- (void)enumerateDir:(NSString*)dirPath 
+               block:(BOOL(^)(NSString *fileName, BOOL isDir, int64_t fileSize))block;
 
 @end
 ```
