@@ -55,7 +55,41 @@ iOS demo was under ios directory, open the xcode project and run the example.
 
 App Store example, https://itunes.apple.com/cn/app/sui-shen-pan/id1076334703
 
+The ObjC interface of MHTTPServ was below:
+````obj-c
+@protocol MHTTPServDelegate <NSObject>
+@optional
+- (void)onMHTTPServEvent:(NSString*)errorMsg fileName:(NSString*)fileName fileSize:(int64_t)fileSize percent:(float)percent;
+@end
 
+@interface MHTTPServ : NSObject
+
+@property (nonatomic,weak) id<MHTTPServDelegate>    delegate;
+
+@property (nonatomic) NSString                      *pageTitle;   // 32 bytes, set before start
+@property (nonatomic) NSString                      *pageDevName; // 32 bytes, set before start
+
+@property (nonatomic,readonly) NSString             *ipAddr; // get ip after start
+
+
++ (instancetype)sharedIns;
+
+- (BOOL)startServ:(NSString*)dirPath onPort:(NSInteger)port;
+- (void)stopServ;
+- (void)enumerateDir:(NSString*)dirPath block:(BOOL(^)(NSString *fileName, BOOL isDir, int64_t fileSize))block;
+
+@end
+```
+
+It's a standalone serv, set delegate, pageTitle, pageDevName before startServ, then you can get ipAddr. stopServ to shutdown the networking, and before startServ from another dir.
+
+When system's WIFI was off, startServ will fail, and no ipAddr available.
+
+Any file POST will invoke delegate onMHTTPServEvent, errorMsg should be nil in normal, and percent indicates upload progress from 0 ~ 1.0.
+
+enumerateDir to get the latest dir info list.
+
+the real world example is HTTPServViewController.m.
 
 
 

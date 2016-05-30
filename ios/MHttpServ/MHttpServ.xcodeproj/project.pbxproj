@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A9C42931CFB52B100051DA8 /* MHTTPServ.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9C42921CFB52B100051DA8 /* MHTTPServ.m */; };
 		2AB3891D1C3AA90300C94FDE /* plat_type.c in Sources */ = {isa = PBXBuildFile; fileRef = 2AB3891B1C3AA90300C94FDE /* plat_type.c */; };
+		2ACD344E1CFC881100F95637 /* HTTPServViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ACD344D1CFC881100F95637 /* HTTPServViewController.m */; };
 		6FDC5B991BA3373A00186E35 /* client_http_serv.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDC5B7F1BA3373A00186E35 /* client_http_serv.c */; };
 		6FDC5B9A1BA3373A00186E35 /* m_buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDC5B821BA3373A00186E35 /* m_buf.c */; };
 		6FDC5B9B1BA3373A00186E35 /* m_debug.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDC5B841BA3373A00186E35 /* m_debug.c */; };
@@ -22,7 +24,6 @@
 		6FE63B581BA3364E00A50065 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63B571BA3364E00A50065 /* main.m */; };
 		6FE63B5B1BA3364E00A50065 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63B5A1BA3364E00A50065 /* AppDelegate.m */; };
 		6FE63B5E1BA3364E00A50065 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63B5D1BA3364E00A50065 /* ViewController.m */; };
-		6FE63B611BA3364E00A50065 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FE63B5F1BA3364E00A50065 /* Main.storyboard */; };
 		6FE63B631BA3364E00A50065 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FE63B621BA3364E00A50065 /* Images.xcassets */; };
 		6FE63B661BA3364E00A50065 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE63B641BA3364E00A50065 /* LaunchScreen.xib */; };
 		6FE63B721BA3364F00A50065 /* MHttpServTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63B711BA3364F00A50065 /* MHttpServTests.m */; };
@@ -39,8 +40,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A9C42911CFB52B100051DA8 /* MHTTPServ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHTTPServ.h; path = MHttpServ/MHTTPServ.h; sourceTree = "<group>"; };
+		2A9C42921CFB52B100051DA8 /* MHTTPServ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHTTPServ.m; path = MHttpServ/MHTTPServ.m; sourceTree = "<group>"; };
 		2AB3891B1C3AA90300C94FDE /* plat_type.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = plat_type.c; sourceTree = "<group>"; };
 		2AB3891C1C3AA90300C94FDE /* plat_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plat_type.h; sourceTree = "<group>"; };
+		2ACD344C1CFC881100F95637 /* HTTPServViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPServViewController.h; sourceTree = "<group>"; };
+		2ACD344D1CFC881100F95637 /* HTTPServViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPServViewController.m; sourceTree = "<group>"; };
 		6FDC5B7F1BA3373A00186E35 /* client_http_serv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client_http_serv.c; sourceTree = "<group>"; };
 		6FDC5B801BA3373A00186E35 /* client_http_serv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_http_serv.h; sourceTree = "<group>"; };
 		6FDC5B821BA3373A00186E35 /* m_buf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = m_buf.c; sourceTree = "<group>"; };
@@ -71,7 +76,6 @@
 		6FE63B5A1BA3364E00A50065 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6FE63B5C1BA3364E00A50065 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		6FE63B5D1BA3364E00A50065 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		6FE63B601BA3364E00A50065 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6FE63B621BA3364E00A50065 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6FE63B651BA3364E00A50065 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		6FE63B6B1BA3364F00A50065 /* MHttpServTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MHttpServTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,7 +184,8 @@
 				6FE63B5A1BA3364E00A50065 /* AppDelegate.m */,
 				6FE63B5C1BA3364E00A50065 /* ViewController.h */,
 				6FE63B5D1BA3364E00A50065 /* ViewController.m */,
-				6FE63B5F1BA3364E00A50065 /* Main.storyboard */,
+				2ACD344C1CFC881100F95637 /* HTTPServViewController.h */,
+				2ACD344D1CFC881100F95637 /* HTTPServViewController.m */,
 				6FE63B621BA3364E00A50065 /* Images.xcassets */,
 				6FE63B641BA3364E00A50065 /* LaunchScreen.xib */,
 				6FE63B551BA3364E00A50065 /* Supporting Files */,
@@ -221,6 +226,8 @@
 				6FDC5B811BA3373A00186E35 /* model */,
 				6FDC5B8A1BA3373A00186E35 /* plat */,
 				6FDC5B921BA3373A00186E35 /* utils */,
+				2A9C42911CFB52B100051DA8 /* MHTTPServ.h */,
+				2A9C42921CFB52B100051DA8 /* MHTTPServ.m */,
 			);
 			name = m_http_serv;
 			path = ..;
@@ -306,7 +313,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FE63B611BA3364E00A50065 /* Main.storyboard in Resources */,
 				6FE63B661BA3364E00A50065 /* LaunchScreen.xib in Resources */,
 				6FE63B631BA3364E00A50065 /* Images.xcassets in Resources */,
 			);
@@ -329,6 +335,7 @@
 				6FDC5B9C1BA3373A00186E35 /* m_list.c in Sources */,
 				6FDC5B991BA3373A00186E35 /* client_http_serv.c in Sources */,
 				6FDC5B9A1BA3373A00186E35 /* m_buf.c in Sources */,
+				2A9C42931CFB52B100051DA8 /* MHTTPServ.m in Sources */,
 				6FDC5B9D1BA3373A00186E35 /* m_mem.c in Sources */,
 				6FE63B5E1BA3364E00A50065 /* ViewController.m in Sources */,
 				6FDC5BA11BA3373A00186E35 /* utils_misc.c in Sources */,
@@ -340,6 +347,7 @@
 				6FDC5BA21BA3373A00186E35 /* utils_str.c in Sources */,
 				6FDC5BA01BA3373A00186E35 /* plat_net.c in Sources */,
 				6FDC5B9E1BA3373A00186E35 /* plat_charset.c in Sources */,
+				2ACD344E1CFC881100F95637 /* HTTPServViewController.m in Sources */,
 				6FE63B581BA3364E00A50065 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,14 +371,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		6FE63B5F1BA3364E00A50065 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6FE63B601BA3364E00A50065 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6FE63B641BA3364E00A50065 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
