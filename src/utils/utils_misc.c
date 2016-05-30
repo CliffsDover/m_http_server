@@ -66,7 +66,7 @@ int misc_write_file(char* fileName, char *buf, unsigned long len) {
    if (fileName && buf && len > 0) {
       FILE *fp = fopen(fileName, "wb");
       if ( fp ) {
-         ret = fwrite(buf, 1, len, fp);
+         ret = (int)fwrite(buf, 1, len, fp);
          fclose(fp);
          return ret;
       }

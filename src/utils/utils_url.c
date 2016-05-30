@@ -70,7 +70,7 @@ char *url_encode(char const *s, int len, int *new_length)
    *to = 0;
    if (new_length) 
    {
-      *new_length = to - start;
+      *new_length = (int)(to - start);
    }
    return (char *) start;
 }
@@ -100,5 +100,5 @@ int url_decode(char *str, int len)
       dest++;
    }
    *dest = 0;
-   return dest - str;
+   return (int)(dest - str);
 }

@@ -51,11 +51,11 @@ more detail in src/lua/agent_cdata.lua.
 
 # iOS demo
 
-iOS demo was under ios directory, open the xcode project and run the example.
+iOS demo was under ios directory, open the MHttpServ.xcodeproj and run the example.
 
 App Store example, https://itunes.apple.com/cn/app/sui-shen-pan/id1076334703
 
-The ObjC interface of MHTTPServ was below:
+The interface of MHTTPServ was:
 ````obj-c
 @protocol MHTTPServDelegate <NSObject>
 @optional
@@ -83,15 +83,17 @@ The ObjC interface of MHTTPServ was below:
 @end
 ```
 
-It's a standalone serv, set delegate, pageTitle, pageDevName before startServ, then you can get ipAddr. stopServ to shutdown the networking, and before startServ from another dir.
+It's a standalone serv, set delegate, pageTitle, pageDevName before startServ, then you can get ipAddr.
+
+stopServ to shutdown the networking, before startServ from another dir.
 
 When system's WIFI was off, startServ will fail, and no ipAddr available.
 
-Any file POST will invoke delegate onMHTTPServEvent, errorMsg should be nil in normal, and percent indicates upload progress from 0 ~ 1.0.
+Any file POST will invoke delegate onMHTTPServEvent, percent indicates upload progress from 0 ~ 1.0. errorMsg should be nil in normal.
 
 enumerateDir to get the latest dir info list.
 
-the real world example is HTTPServViewController.m.
+The real world example was HTTPServViewController.m.
 
 using MHttpServ-Static project to get framework, choose 'Generic iOS Device' to build.
 

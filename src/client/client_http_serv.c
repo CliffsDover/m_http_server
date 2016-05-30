@@ -24,8 +24,6 @@
 
 #include "client_http_serv.h"
 
-#ifdef TEST_CLIENT_HTTP_SERV
-
 /* only support 1 file now
  */
 
@@ -728,6 +726,8 @@ void client_http_serv_close(void) {
       hs->running = 0;
    }
 }
+
+#ifdef TEST_CLIENT_HTTP_SERV
 
 typedef struct {
    FILE *fp;

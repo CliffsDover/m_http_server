@@ -462,7 +462,7 @@ static str_t* _push_onecapture (MatchState *ms, int i, const char *s,
    if (i >= ms->level) {
       if (i == 0) { /* ms->level == 0, too */
          //lua_pushlstring(ms->L, s, e - s);  /* add whole match */
-         return str_clone_cstr(s, e - s);
+         return str_clone_cstr(s, (int)(e - s));
       }
       else {
          //luaL_error(ms->L, "invalid capture index");
@@ -483,7 +483,7 @@ static str_t* _push_onecapture (MatchState *ms, int i, const char *s,
       }
 #endif
       //lua_pushlstring(ms->L, ms->capture[i].init, l);
-      return str_clone_cstr(ms->capture[i].init, l);
+      return str_clone_cstr(ms->capture[i].init, (int)l);
    }
 }
 
@@ -600,7 +600,7 @@ str_find(str_t *m, const char *pattern, int pos) {
       const char *s = m->cstr;
       const char *p = pattern;
       ls = m->len;
-      lp = strlen(pattern);
+      lp = (int)strlen(pattern);
       int init = _posrelat(pos, lp);
       if (init < 1) init = 1;
       else if (init > ls + 1) { /* start after string's end? */
@@ -646,11 +646,11 @@ str_find(str_t *m, const char *pattern, int pos) {
 int
 str_locate(str_t *m, const char *pattn, int icase) {
    if (m && pattn) {
-      int dlen = strnlen(pattn, USTR_DELIM_MAX_LEN);
+      int dlen = (int)strnlen(pattn, USTR_DELIM_MAX_LEN);
       if (m->len > dlen) {
          char *p = icase ? strcasestr(m->cstr, pattn) : strstr(m->cstr, pattn);
          if ( p ) {
-            return (p - m->cstr);
+            return (int)(p - m->cstr);
          }
       }
    }
@@ -715,7 +715,7 @@ str_next(str_t *m) {
 str_t*
 str_split(str_t *m, const char *delim, int icase) {
    if (m && delim) {
-      int dlen = strnlen(delim, USTR_DELIM_MAX_LEN);
+      int dlen = (int)strnlen(delim, USTR_DELIM_MAX_LEN);
       if ((dlen>0) && (m->len>dlen)) {
          //_info("search v\n");
          str_t *head=NULL, *h=NULL;
@@ -734,7 +734,7 @@ str_split(str_t *m, const char *delim, int icase) {
                }
             }
             {
-               str_t *nm = _child(m, str_clone_cstr(p, n-p));
+               str_t *nm = _child(m, str_clone_cstr(p, (int)(n-p)));
                if (head == NULL) {
                   head = nm;
                }

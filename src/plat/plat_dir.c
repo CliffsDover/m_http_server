@@ -125,7 +125,7 @@ mdir_open(const char *dir_path) {
    if ((d->dirp=opendir(dir_path)) == NULL) { goto fail; }
 #endif
 
-   int dir_len = strlen(dir_path);
+   int dir_len = (int)strlen(dir_path);
    d->dir_path = (char*)mm_malloc(dir_len + 1);
    memcpy(d->dir_path, dir_path, dir_len);
    d->dir_path[dir_len] = 0;
@@ -182,7 +182,7 @@ mdir_list(mdir_t *d, int count) {
 
          sprintf(d->tmp_path, "%s/%s", d->dir_path, dp->d_name);
          if (mdir_stat(d->tmp_path, &fsize, &ftype) ) {
-            int namlen = strlen(dp->d_name);
+            int namlen = (int)strlen(dp->d_name);
             e = _create_dir_entry(namlen + 1);
             e->ftype = ftype;
             e->fsize = fsize;
