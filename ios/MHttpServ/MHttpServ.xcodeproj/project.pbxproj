@@ -26,18 +26,7 @@
 		6FE63B5E1BA3364E00A50065 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63B5D1BA3364E00A50065 /* ViewController.m */; };
 		6FE63B631BA3364E00A50065 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FE63B621BA3364E00A50065 /* Images.xcassets */; };
 		6FE63B661BA3364E00A50065 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE63B641BA3364E00A50065 /* LaunchScreen.xib */; };
-		6FE63B721BA3364F00A50065 /* MHttpServTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE63B711BA3364F00A50065 /* MHttpServTests.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		6FE63B6C1BA3364F00A50065 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FE63B4A1BA3364E00A50065 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6FE63B511BA3364E00A50065;
-			remoteInfo = MHttpServ;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		2A9C42911CFB52B100051DA8 /* MHTTPServ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHTTPServ.h; path = MHttpServ/MHTTPServ.h; sourceTree = "<group>"; };
@@ -78,20 +67,10 @@
 		6FE63B5D1BA3364E00A50065 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		6FE63B621BA3364E00A50065 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6FE63B651BA3364E00A50065 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		6FE63B6B1BA3364F00A50065 /* MHttpServTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MHttpServTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6FE63B701BA3364F00A50065 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6FE63B711BA3364F00A50065 /* MHttpServTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MHttpServTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		6FE63B4F1BA3364E00A50065 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6FE63B681BA3364F00A50065 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -162,7 +141,6 @@
 			isa = PBXGroup;
 			children = (
 				6FE63B541BA3364E00A50065 /* MHttpServ */,
-				6FE63B6E1BA3364F00A50065 /* MHttpServTests */,
 				6FE63B531BA3364E00A50065 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -171,7 +149,6 @@
 			isa = PBXGroup;
 			children = (
 				6FE63B521BA3364E00A50065 /* MHttpServ.app */,
-				6FE63B6B1BA3364F00A50065 /* MHttpServTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -198,23 +175,6 @@
 			children = (
 				6FE63B561BA3364E00A50065 /* Info.plist */,
 				6FE63B571BA3364E00A50065 /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		6FE63B6E1BA3364F00A50065 /* MHttpServTests */ = {
-			isa = PBXGroup;
-			children = (
-				6FE63B711BA3364F00A50065 /* MHttpServTests.m */,
-				6FE63B6F1BA3364F00A50065 /* Supporting Files */,
-			);
-			path = MHttpServTests;
-			sourceTree = "<group>";
-		};
-		6FE63B6F1BA3364F00A50065 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				6FE63B701BA3364F00A50065 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -253,24 +213,6 @@
 			productReference = 6FE63B521BA3364E00A50065 /* MHttpServ.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6FE63B6A1BA3364F00A50065 /* MHttpServTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6FE63B781BA3364F00A50065 /* Build configuration list for PBXNativeTarget "MHttpServTests" */;
-			buildPhases = (
-				6FE63B671BA3364F00A50065 /* Sources */,
-				6FE63B681BA3364F00A50065 /* Frameworks */,
-				6FE63B691BA3364F00A50065 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6FE63B6D1BA3364F00A50065 /* PBXTargetDependency */,
-			);
-			name = MHttpServTests;
-			productName = MHttpServTests;
-			productReference = 6FE63B6B1BA3364F00A50065 /* MHttpServTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -282,10 +224,6 @@
 				TargetAttributes = {
 					6FE63B511BA3364E00A50065 = {
 						CreatedOnToolsVersion = 6.3.1;
-					};
-					6FE63B6A1BA3364F00A50065 = {
-						CreatedOnToolsVersion = 6.3.1;
-						TestTargetID = 6FE63B511BA3364E00A50065;
 					};
 				};
 			};
@@ -303,7 +241,6 @@
 			projectRoot = "";
 			targets = (
 				6FE63B511BA3364E00A50065 /* MHttpServ */,
-				6FE63B6A1BA3364F00A50065 /* MHttpServTests */,
 			);
 		};
 /* End PBXProject section */
@@ -315,13 +252,6 @@
 			files = (
 				6FE63B661BA3364E00A50065 /* LaunchScreen.xib in Resources */,
 				6FE63B631BA3364E00A50065 /* Images.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6FE63B691BA3364F00A50065 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,23 +282,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6FE63B671BA3364F00A50065 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6FE63B721BA3364F00A50065 /* MHttpServTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		6FE63B6D1BA3364F00A50065 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6FE63B511BA3364E00A50065 /* MHttpServ */;
-			targetProxy = 6FE63B6C1BA3364F00A50065 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		6FE63B641BA3364E00A50065 /* LaunchScreen.xib */ = {
@@ -486,40 +400,6 @@
 			};
 			name = Release;
 		};
-		6FE63B791BA3364F00A50065 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = MHttpServTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MHttpServ.app/MHttpServ";
-			};
-			name = Debug;
-		};
-		6FE63B7A1BA3364F00A50065 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = MHttpServTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MHttpServ.app/MHttpServ";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -537,15 +417,6 @@
 			buildConfigurations = (
 				6FE63B761BA3364F00A50065 /* Debug */,
 				6FE63B771BA3364F00A50065 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6FE63B781BA3364F00A50065 /* Build configuration list for PBXNativeTarget "MHttpServTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6FE63B791BA3364F00A50065 /* Debug */,
-				6FE63B7A1BA3364F00A50065 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

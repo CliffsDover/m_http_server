@@ -3,6 +3,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if __has_include(<MHttpServ/MHttpServ.h>)
+FOUNDATION_EXPORT double MHttpServVersionNumber;
+FOUNDATION_EXPORT const unsigned char MHttpServVersionString[];
+#endif
+
 @protocol MHTTPServDelegate <NSObject>
 @optional
 - (void)onMHTTPServEvent:(NSString*)errorMsg fileName:(NSString*)fileName fileSize:(int64_t)fileSize percent:(float)percent;

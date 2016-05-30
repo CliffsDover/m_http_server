@@ -93,6 +93,8 @@ enumerateDir to get the latest dir info list.
 
 the real world example is HTTPServViewController.m.
 
+using MHttpServ-Static project to get framework, choose 'Generic iOS Device' to build.
+
 
 
 

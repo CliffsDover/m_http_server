@@ -2,6 +2,5 @@
 *.dSYM/*
 out/*
 TAGS
-ios/MHttpServ/MHttpServ.xcodeproj/xcuserdata/lalawue.xcuserdatad
-ios/MHttpServ/MHttpServ.xcodeproj/project.xcworkspace/xcshareddata/MHttpServ.xccheckout
-ios/MHttpServ/MHttpServ.xcodeproj/project.xcworkspace/xcuserdata/lalawue.xcuserdatad
+*.xcworkspace
+*xcuserdata
